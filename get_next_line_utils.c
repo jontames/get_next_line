@@ -26,6 +26,29 @@ char	*ft_strdup(const char *s)
 	return (dup);
 }
 
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*sub_s;
+	size_t	i;
+	size_t	rest;
+
+	if (s == NULL)
+		return (NULL);
+	if (start >= ft_strlen(s))
+		return (ft_strdup(""));
+	rest = ft_strlen(s) - start;
+	if (len >= rest)
+		len = rest;
+	sub_s = malloc(len + 1);
+	if (sub_s == NULL)
+		return (NULL);
+	i = 0;
+	while ((i < len) && (s[start] != '\0'))
+		sub_s[i++] = s[start++];
+	sub_s[i] = '\0';
+	return (sub_s);
+}
+
 void	ft_bzero(void *s, size_t n)
 {
 	size_t			i;
