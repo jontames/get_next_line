@@ -12,6 +12,39 @@
 
 #include "get_next_line.h"
 
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	size_t			i;
+	unsigned char	*dest_ptr;
+	unsigned char	*src_ptr;
+
+	if (!dest)
+		return (NULL);
+	if (src == NULL && dest)
+		return (dest);
+	i = 0;
+	dest_ptr = (unsigned char *)dest;
+	src_ptr = (unsigned char *)src;
+	while (i < n)
+	{
+		dest_ptr[i] = src_ptr[i];
+		i++;
+	}
+	return (dest);
+}
+
 char	*ft_strdup(const char *s)
 {
 	size_t		len;
@@ -60,27 +93,6 @@ void	ft_bzero(void *s, size_t n)
 		ptr[i++] = '\0';
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	size_t			i;
-	unsigned char	*dest_ptr;
-	unsigned char	*src_ptr;
-
-	if (!dest)
-		return (NULL);
-	if (src == NULL && dest)
-		return (dest);
-	i = 0;
-	dest_ptr = (unsigned char *)dest;
-	src_ptr = (unsigned char *)src;
-	while (i < n)
-	{
-		dest_ptr[i] = src_ptr[i];
-		i++;
-	}
-	return (dest);
-}
-
 char	*ft_strchr(const char *s, int c)
 {
 	int		i;
@@ -94,18 +106,6 @@ char	*ft_strchr(const char *s, int c)
 	if (s[i] == cc)
 		return ((char *)&s[i]);
 	return (NULL);
-}
-
-size_t	ft_strlen(const char *s)
-{
-	size_t	i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)

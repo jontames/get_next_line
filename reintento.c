@@ -1,3 +1,4 @@
+
 #include "get_next_line.h"
 
 char	*text_update(char *text, char *readen)
@@ -21,14 +22,17 @@ char	*get_next_line(int fd)
 	readen = calloc(1, BUFFER_SIZE + 1);
 	if (!text)
 		text = calloc(1, 1);
-	while (ft_strchr(text, '\n') == NULL)
+	while (ft_strchr(readen, '\n') == NULL)
 	{
 		if (read(fd, readen, BUFFER_SIZE) == 0)
 			return (printf("%s", readen), free (text), free (readen), NULL);
 		readen[ft_strlen(readen)] = '\0';
 		text = text_update(text, readen);
 	}
-	line = ft_substr(text, 0, ft_strlen(text) - ft_strlen(ft_strchr(text, '\n'))); //+ 1 para incluir el salto de linea
+	if (text[0] == '\n')
+		line = ft_substr(text, 1, ft_strlen(text) - ft_strlen(ft_strchr(text + 1, '\n'))); //+ 1 para incluir el salto de linea
+	else
+		line = ft_substr(text, 0, ft_strlen(text) - ft_strlen(ft_strchr(text, '\n'))); //+ 1 para incluir el salto de linea
 	temp = ft_strchr(readen, '\n');
 	ft_bzero(text, ft_strlen(text));
 	text = text_update(text, temp);
