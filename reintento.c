@@ -24,20 +24,29 @@ char	*get_next_line(int fd)
 		text = calloc(1, 1);
 	while (ft_strchr(readen, '\n') == NULL)
 	{
-		if (read(fd, readen, BUFFER_SIZE) == 0)
-			return (printf("%s", readen), free (text), free (readen), NULL);
+		if (ft_strlen(text) > 0 && ft_strchr(text, '\n') == NULL)
+		{
+			temp = ft_strdup(text);
+			ft_bzero(text, ft_strlen(text));
+			return (free (readen), temp);
+		}
+		if (read(fd, readen, BUFFER_SIZE) == 0 && ft_strlen(text) == 0)
+			return (free (readen), free (text), NULL);
 		readen[ft_strlen(readen)] = '\0';
 		text = text_update(text, readen);
+		if (ft_strlen(readen) < BUFFER_SIZE)
+			break ;
 	}
 	if (text[0] == '\n')
-		line = ft_substr(text, 1, ft_strlen(text) - ft_strlen(ft_strchr(text + 1, '\n'))); //+ 1 para incluir el salto de linea
+		line = ft_substr(text, 0, ft_strlen(text) - ft_strlen(ft_strchr(text + 1, '\n')));
 	else
-		line = ft_substr(text, 0, ft_strlen(text) - ft_strlen(ft_strchr(text, '\n'))); //+ 1 para incluir el salto de linea
-	temp = ft_strchr(readen, '\n');
+		line = ft_substr(text, 0, ft_strlen(text) - ft_strlen(ft_strchr(text, '\n')));
+	if (ft_strchr(readen, '\n'))
+		temp = ft_strchr(readen, '\n');
+	else
+		temp = readen;
 	ft_bzero(text, ft_strlen(text));
 	text = text_update(text, temp);
-	// printf("%s\n", text);
-	// free (text);
 	free (readen);
 	return(line);
 }
@@ -60,7 +69,7 @@ int	main()
 	{
 		get_line = get_next_line(fd);
 		if (get_line == NULL)
-			return (free (get_line), 0);
+			return (0);
 		printf("%s", get_line);
 		free (get_line);
 	}
