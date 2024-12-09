@@ -81,25 +81,51 @@ char	*ft_strchr(const char *s, int c)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
+	int		i;
+	int		j;
+	size_t	len;
 	char	*new_s;
+
+	len = ft_strlen(s1) + ft_strlen(s2);
+	new_s = malloc(len + 1);
+	if (new_s == NULL)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s1[i] != '\0')
+	{
+		new_s[i] = s1[i];
+		i++;
+	}
+	while (s2[j] != '\0')
+		new_s[i++] = s2[j++];
+	new_s[i] = '\0';
+	return (new_s);
+}
+
+/* char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*new_s;
+	size_t	l_new;
 	size_t	i;
 	size_t	j;
 
 	if (!s1 || !s2)
 		return (NULL);
-	new_s = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	l_new = ft_strlen(s1) + ft_strlen(s2);
+	new_s = malloc(l_new + 1);
 	if (new_s == NULL)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (i < (ft_strlen(s1) + ft_strlen(s2)))
+	while (i < l_new)
 	{
-		if (i < ft_strlen(s1))
+		if (s1[i] != '\0')
 			new_s[i] = s1[i];
-		else if (i >= ft_strlen(s1))
+		else
 			new_s[i] = s2[j++];
 		i++;
 	}
 	new_s[i] = '\0';
 	return (new_s);
-}
+} */

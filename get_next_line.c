@@ -1,21 +1,38 @@
 
 #include "get_next_line.h"
 
-char	*ft_substract(char *text)
+char	*save_rest(char *text)
 {
-	int		len;
-	int		i;
 	char	*temp;
 
-	len = 0;
-	i = -1;
-	if (text == NULL)
-		return ("");
-	while (text[++i] == '\n')
-		len++;
-	while (text[i] != '\n' && text[i++] != '\0')
-		len++;
-	temp = ft_substr(text, 0, len);
+	temp = ft_strchr(text, '\n');
+	if (temp == NULL)
+	{
+		free (text);
+		return (ft_strdup(""));
+	}
+	temp = ft_strdup(temp + 1);
+	free (text);
+	return (temp);
+}
+
+char	*substract_line(char *text)
+{
+	int		i;
+	char	*line_substr;
+	char	*temp;
+
+	i = 0;
+	line_substr = calloc(1, ft_strlen(text) + 1);
+	while (text[i] != '\0' && text[i] != '\n')
+	{
+		line_substr[i] = text[i];
+		i++;
+	}
+	if (text[i] == '\n')
+		line_substr[i] = '\n';
+	temp = ft_strdup(line_substr);
+	free (line_substr);
 	return (temp);
 }
 
@@ -34,61 +51,59 @@ char	*get_next_line(int fd)
 {
 	char		*readen;
 	static char	*text;
-	size_t		b_read;
-	char		*line;
-	char		*temp;
-	size_t		i;
+	char		*get_line;
+	int			i;
 
 	if (fd == -1)
-		return (0);
-	readen = calloc(1, BUFFER_SIZE + 1);
-	if (!readen)
 		return (NULL);
+	readen = calloc(1, BUFFER_SIZE + 1);
 	if (!text)
 		text = calloc(1, 1);
-	b_read = BUFFER_SIZE;
-	while (ft_strchr(readen, '\n') == NULL && b_read == BUFFER_SIZE)
+	while (read(fd, readen, BUFFER_SIZE) > 0)
 	{
-		i = ft_strlen(readen);
-		while (i > 0)
-			readen[i--] = '\0';
-		b_read = read(fd, readen, BUFFER_SIZE);
-		if (b_read != 0)
-			text = text_update(text, readen);
+		text = text_update(text, readen);
+		i = 0;
+		while (readen[i] != '\0')
+			readen[i++] = '\0';
+		if (ft_strchr(text, '\n'))
+			break;
 	}
 	if (text[0] == '\0')
-		return (free (readen), free (text), NULL);
-	line = ft_substract(text);
-	temp = ft_strdup(text + ft_strlen(line));
-	free (text);
-	text = text_update(temp, "");
+		return (free (readen), NULL);
+	get_line = substract_line(text);
+	text = save_rest(text);
 	free (readen);
-	return (line);
+	return (get_line);
 }
 
-/* int	main(void)
+int	main(void)
 {
 	int		fd;
-	char	*get_line;
+	char	*line;
 	int		i;
 
-	fd = open("text.txt", O_RDONLY);
+	fd = open("text", O_RDWR);
 	if (fd == -1)
 		return (0);
-	get_line = get_next_line(fd);
-	if (get_line == NULL)
-		return (0);
-	printf("%s", get_line);
-	free (get_line);
+
+	// line = get_next_line(fd);
+	// line = get_next_line(fd);
+	// if (line == NULL)
+	// 	return (0);
+	// printf("%s", line);
+	// free (line);
+
 	i = 0;
 	while (1)
 	{
 		i++;
-		get_line = get_next_line(fd);
-		if (get_line == NULL)
+		line = get_next_line(fd);
+		if (line == NULL)
 			return (0);
-		printf("%s %d", get_line, i);
-		free (get_line);
+		printf("%d: %s", i, line);
+		free (line);
 	}
+
+	close (fd);
 	return (0);
-} */
+}

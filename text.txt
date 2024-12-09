@@ -1,6 +1,0 @@
-\\0aa aaa.
-
-bb bbb.
-cc ccc.
-dd ddd.
-ee eee.
