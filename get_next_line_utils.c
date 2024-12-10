@@ -41,29 +41,6 @@ char	*ft_strdup(const char *s)
 	return (dup);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
-{
-	char	*sub_s;
-	size_t	i;
-	size_t	rest;
-
-	if (s == NULL)
-		return (NULL);
-	if (start >= ft_strlen(s))
-		return (ft_strdup(""));
-	rest = ft_strlen(s) - start;
-	if (len >= rest)
-		len = rest;
-	sub_s = malloc(len + 1);
-	if (sub_s == NULL)
-		return (NULL);
-	i = 0;
-	while ((i < len) && (s[start] != '\0'))
-		sub_s[i++] = s[start++];
-	sub_s[i] = '\0';
-	return (sub_s);
-}
-
 char	*ft_strchr(const char *s, int c)
 {
 	int		i;
@@ -103,29 +80,23 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (new_s);
 }
 
-/* char	*ft_strjoin(char const *s1, char const *s2)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	*new_s;
-	size_t	l_new;
+	size_t	total_size;
 	size_t	i;
-	size_t	j;
+	void	*ptr;
+	char	*temp;
 
-	if (!s1 || !s2)
+	if (nmemb == SIZE_MAX || size == SIZE_MAX
+		|| (nmemb >= 4294967296 && size >= 4294967296))
 		return (NULL);
-	l_new = ft_strlen(s1) + ft_strlen(s2);
-	new_s = malloc(l_new + 1);
-	if (new_s == NULL)
+	total_size = nmemb * size;
+	ptr = malloc((size_t)total_size);
+	if (ptr == NULL)
 		return (NULL);
 	i = 0;
-	j = 0;
-	while (i < l_new)
-	{
-		if (s1[i] != '\0')
-			new_s[i] = s1[i];
-		else
-			new_s[i] = s2[j++];
-		i++;
-	}
-	new_s[i] = '\0';
-	return (new_s);
-} */
+	temp = (char *)ptr;
+	while (i < total_size)
+		temp[i++] = '\0';
+	return (ptr);
+}

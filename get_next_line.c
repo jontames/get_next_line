@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jtames <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/10 15:27:57 by jtames            #+#    #+#             */
+/*   Updated: 2024/12/10 15:28:04 by jtames           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "get_next_line.h"
 
@@ -23,7 +34,7 @@ char	*substract_line(char *text)
 	char	*temp;
 
 	i = 0;
-	line_substr = calloc(1, ft_strlen(text) + 1);
+	line_substr = ft_calloc(1, ft_strlen(text) + 1);
 	while (text[i] != '\0' && text[i] != '\n')
 	{
 		line_substr[i] = text[i];
@@ -40,25 +51,19 @@ char	*text_update(char *text, char *readen)
 {
 	char	*temp;
 
-	if (!text || !readen)
+	if (!readen)
 		return (NULL);
+	if (!text)
+		text = ft_calloc(1, 1);
 	temp = ft_strjoin(text, readen);
 	free(text);
 	return (temp);
 }
 
-char	*get_next_line(int fd)
+char	*read_file(char *text, char *readen, int fd)
 {
-	char		*readen;
-	static char	*text;
-	char		*get_line;
-	int			i;
+	int		i;
 
-	if (fd == -1)
-		return (NULL);
-	readen = calloc(1, BUFFER_SIZE + 1);
-	if (!text)
-		text = calloc(1, 1);
 	while (read(fd, readen, BUFFER_SIZE) > 0)
 	{
 		text = text_update(text, readen);
@@ -66,17 +71,36 @@ char	*get_next_line(int fd)
 		while (readen[i] != '\0')
 			readen[i++] = '\0';
 		if (ft_strchr(text, '\n'))
-			break;
+			break ;
 	}
-	if (text[0] == '\0')
-		return (free (readen), NULL);
+	return (text);
+}
+
+char	*get_next_line(int fd)
+{
+	char		*readen;
+	static char	*text;
+	char		*get_line;
+
+	if (fd == -1)
+		return (NULL);
+	readen = ft_calloc(1, BUFFER_SIZE + 1);
+	text = read_file(text, readen, fd);
+	if (!text || text[0] == '\0')
+	{
+		free (readen);
+		if (!text)
+			return (NULL);
+		free (text);
+		return (NULL);
+	}
 	get_line = substract_line(text);
 	text = save_rest(text);
 	free (readen);
 	return (get_line);
 }
 
-int	main(void)
+/* int	main(void)
 {
 	int		fd;
 	char	*line;
@@ -106,4 +130,4 @@ int	main(void)
 
 	close (fd);
 	return (0);
-}
+} */
